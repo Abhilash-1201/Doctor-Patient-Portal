@@ -31,7 +31,12 @@ pipeline {
             steps {
                 dir('D:\\Wezva Technologies\\PROJECT_DEV\\Doctor-Patient-Portal-AdvanceJavaWebProject-main\\Doctor-Patient-Portal') {
                     // Build the Maven code after analysis
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                     script {
+                         def result = bat(script: 'mvn -Dmaven.test.failure.ignore=true clean package', returnStatus: true)
+                         if (result != 0) {
+                             error "Maven build failed with exit code ${result}"
+                        }
+                    }
                 }
             }
         }
