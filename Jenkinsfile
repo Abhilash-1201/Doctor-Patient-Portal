@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Building the project') {
             steps {
-                dir('D:\Wezva Technologies\PROJECT_DEV\Doctor-Patient-Portal-AdvanceJavaWebProject-main\Doctor-Patient-Portal') {
+                dir('D:\\Wezva Technologies\\PROJECT_DEV\\Doctor-Patient-Portal-AdvanceJavaWebProject-main\\Doctor-Patient-Portal') {
                     // Build the Maven code after analysis
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
                 }
