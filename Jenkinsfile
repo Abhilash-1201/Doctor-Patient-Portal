@@ -89,6 +89,13 @@ pipeline {
                 }
             }
         }
+        stage('Build docker image to dev ecr')  {
+            steps{
+                script{
+                myImage = docker.build devregistry
+                }
+            }
+        }
     }
 }
 
