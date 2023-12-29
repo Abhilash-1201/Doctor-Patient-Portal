@@ -27,18 +27,13 @@ pipeline {
                 }
             }
         }
-        stage('Building the project') {
-            steps {
-                dir('D:\\Wezva Technologies\\PROJECT_DEV\\Doctor-Patient-Portal-AdvanceJavaWebProject-main\\Doctor-Patient-Portal') {
-                    // Build the Maven code after analysis
-                     script {
-                         def result = bat(script: 'mvn -Dmaven.test.failure.ignore=true clean package', returnStatus: true)
-                         if (result != 0) {
-                             error "Maven build failed with exit code ${result}"
-                        }
-                    }
-                }
-            }
+        stage("Build") {
+          steps {
+            git url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
+            withMaven {
+              sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe reports and FindBugs reports
+          }
         }
     }
 }
