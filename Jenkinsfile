@@ -1,6 +1,19 @@
 pipeline {
     agent any
      tools {maven "MAVEN"}
+     environment { 
+        // This can be nexus3 or nexus2
+        NEXUS_VERSION = "nexus3"
+        // This can be http or https
+        NEXUS_PROTOCOL = "http"
+        // Where your Nexus is running
+        NEXUS_URL = "18.117.250.81:8081"
+        // Repository where we will upload the artifact
+        NEXUS_REPOSITORY = "doctorpatientportal"
+        // Jenkins credential id to authenticate to Nexus OSS
+        NEXUS_CREDENTIAL_ID = "nexusCredential"
+        ARTIFACT_VERSION = "${BUILD_NUMBER}"
+    }
     stages {
         stage('Checkout Stage') {
             steps {
