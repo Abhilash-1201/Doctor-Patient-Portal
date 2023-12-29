@@ -2,7 +2,7 @@
 FROM tomcat:9
 
 # Remove the default ROOT application (optional)
-RUN rm -rf /usr/local/tomcat/webapps/ROOTd
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Create a directory to store the WAR file
 RUN mkdir /app
