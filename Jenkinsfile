@@ -2,6 +2,7 @@ pipeline {
     agent any
      tools {maven "MAVEN"}
      environment { 
+        devregistry = "519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:${env.BUILD_NUMBER}"
         // This can be nexus3 or nexus2
         NEXUS_VERSION = "nexus3"
         // This can be http or https
