@@ -28,13 +28,10 @@ pipeline {
                 }
             }
         }
-        stage("Build") {
-          steps {
-            git branch: 'main', credentialsId: 'DoctorpatientPortal', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
-            withMaven(maven: 'MAVEN') {
-              sh "mvn clean package"
-            } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe reports and FindBugs reports
-          }
+        stage('Build') {
+            steps {
+                mvn 'clean install'
+            }
         }
     }
 }
