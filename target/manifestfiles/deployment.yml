@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doctor-patient-portal
+  labels:
+    app: doctor-patient-portal
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: doctor-patient-portal
+  template:
+    metadata:
+      labels:
+        app: doctor-patient-portal
+    spec:
+      containers:
+      - name: doctor-patient-portal
+        image: 519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:${BUILD_NUMBER}
+        ports:
+        - containerPort: 8085
