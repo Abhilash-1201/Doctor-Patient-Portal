@@ -105,6 +105,27 @@ pipeline {
                 }
            }   
         }  
+        stage('Update Deployment File') {
+            environment {
+                GIT_REPO_NAME = "InvoiceApplication"
+                GIT_USER_NAME = "Abhilash-1201"
+            }
+            steps {
+                withCredentials([gitUsernamePassword(credentialsId: 'GitHub_Token', gitToolName: 'Default')]) {
+                    sh '''
+                        set -x
+                        git config user.email "rlabhilash1201@gmail.com"
+                        git config user.name "Abhilash-1201"
+                        BUILD_NUMBER=${BUILD_NUMBER}
+                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" manifestfiles/deployment.yml
+                        cat manifestfiles/deployment.yml  # Print the contents of the file for debugging
+                        git add manifestfiles/deployment.yml
+                        git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    '''
+                }
+             }
+        }
     }
 }
 
