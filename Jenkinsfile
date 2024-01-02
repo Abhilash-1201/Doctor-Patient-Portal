@@ -112,20 +112,29 @@ pipeline {
             }
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'GitHub_Token', gitToolName: 'Default')]) {
-                    sh '''
-                        set -x
-                        git config user.email "rlabhilash1201@gmail.com"
-                        git config user.name "Abhilash-1201"
-                        BUILD_NUMBER=${BUILD_NUMBER}
-                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" manifest/deployment.yml
-                        cat manifest/deployment.yml  # Print the contents of the file for debugging
-                        git add manifest/deployment.yml
-                        git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                    '''
+                    script {
+                        def gitEmail = sh(script: 'git config user.email', returnStdout: true).trim()
+                        def gitName = sh(script: 'git config user.name', returnStdout: true).trim()
+                
+                        sh '''
+                            set -x
+                            git config user.email "rlabhilash1201@gmail.com"
+                            git config user.name "Abhilash-1201"
+                            BUILD_NUMBER=${BUILD_NUMBER}
+                            sed -i "s|devregistry-image-placeholder|${devregistry}|g" manifest/deployment.yml
+                            cat manifest/deployment.yml  # Print the contents of the file for debugging
+                            git add manifest/deployment.yml
+                            git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        '''
+                        // Restore original git config values
+                        sh "git config user.email '${gitEmail}'"
+                        sh "git config user.name '${gitName}'"
+                    }
                 }
-             }
+            }
         }
+
     }
 }
 
