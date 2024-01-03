@@ -8,7 +8,7 @@ pipeline {
         // This can be http or https
         NEXUS_PROTOCOL = "http"
         // Where your Nexus is running
-        NEXUS_URL = "3.145.60.125:8081"
+        NEXUS_URL = "13.58.37.194:8081"
         // Repository where we will upload the artifact
         NEXUS_REPOSITORY = "DoctorPortal"
         // Jenkins credential id to authenticate to Nexus OSS
@@ -31,13 +31,13 @@ pipeline {
         stage('Email Notification') {
             steps {
                 script {
-                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.222.176.246:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
+                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.219.165.229:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
            
                     if (qg == 'ERROR' || qg == 'OK') {
                     mail to: "rlabhilashabhi07@gmail.com",
                     subject: "SonarQube Analysis Notification",
-                    body: qg == 'ERROR' ? "SonarQube analysis passed \n\n\n Hi Team,\n\n\nPlease find the SonarQube Analysis Report with credentials below\n\n\nSonarQube Analysis Report : http://3.128.247.190:9000/dashboard?id=DoctorPatientPortal\n\n\n login=admin\npassword=abhi\n\n\nRegards\nAbhilash" :
-                                          "SonarQube analysis failed \n\n\n Hi Team,\n\n\nPlease find the SonarQube Analysis Report with credentials below\n\n\nSonarQube Analysis Report : http://3.128.247.190:9000/dashboard?id=DoctorPatientPortal\n\n\nlogin=admin\npassword=abhi\n\n\nRegards\nAbhilash"
+                    body: qg == 'ERROR' ? "SonarQube analysis passed \n\n\n Hi Team,\n\n\nPlease find the SonarQube Analysis Report with credentials below\n\n\nSonarQube Analysis Report : http://18.219.165.229:9000/dashboard?id=DoctorPatientPortal\n\n\n login=admin\npassword=abhi\n\n\nRegards\nAbhilash" :
+                                          "SonarQube analysis failed \n\n\n Hi Team,\n\n\nPlease find the SonarQube Analysis Report with credentials below\n\n\nSonarQube Analysis Report : http://18.219.165.229:9000/dashboard?id=DoctorPatientPortal\n\n\nlogin=admin\npassword=abhi\n\n\nRegards\nAbhilash"
                     }
                 }
             }
