@@ -104,41 +104,7 @@ pipeline {
                    sh 'docker push ${devregistry}'
                 }
            }   
-        }  
-        stage('Update Deployment File') {
-    environment {
-        GIT_REPO_NAME = "Doctor-Patient-Portal"
-        GIT_USER_NAME = "Abhilash-1201"
-    }
-    steps {
-        withCredentials([gitUsernamePassword(credentialsId: 'GitHub_Token', gitToolName: 'Default')]) {
-            script {
-                def gitEmail = sh(script: 'git config user.email', returnStdout: true).trim()
-                def gitName = sh(script: 'git config user.name', returnStdout: true).trim()
-
-                // Configure git user email and name for the Jenkins job
-                sh 'git config user.email "rlabhilash1201@gmail.com"'
-                sh 'git config user.name "Abhilash-1201"'
-
-                // Add changes to the Git index
-                sh 'git add manifest/deployment.yml'
-                sh 'git add -u'  // Add updated and deleted files to the Git index
-
-                // Commit changes
-                sh 'git commit -m "Update deployment image to version ${BUILD_NUMBER}"'
-
-                // Push changes to the remote repository
-                sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main"
-
-                // Restore original git config values
-                sh "git config user.email '${gitEmail}'"
-                sh "git config user.name '${gitName}'"
-            }
-        }
-     }
-}
-
-
+        } 
     }
 }
 
