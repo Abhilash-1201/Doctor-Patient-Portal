@@ -8,7 +8,7 @@ pipeline {
         // This can be http or https
         NEXUS_PROTOCOL = "http"
         // Where your Nexus is running
-        NEXUS_URL = "18.118.141.234:8081"
+        NEXUS_URL = "18.221.87.11:8081"
         // Repository where we will upload the artifact
         NEXUS_REPOSITORY = "DoctorPortal"
         // Jenkins credential id to authenticate to Nexus OSS
@@ -31,7 +31,7 @@ pipeline {
         stage('Email Notification') {
             steps {
                 script {
-                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.224.17.30:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
+                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://3.133.92.120:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
            
                     if (qg == 'ERROR' || qg == 'OK') {
                     mail to: "rlabhilashabhi07@gmail.com",
