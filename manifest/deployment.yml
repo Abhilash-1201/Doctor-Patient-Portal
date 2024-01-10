@@ -19,3 +19,5 @@ spec:
         image: 519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:replaceImageTag
         ports:
         - containerPort: 8085
+
+        
