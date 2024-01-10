@@ -16,8 +16,6 @@ spec:
     spec:
       containers:
       - name: doctor-patient-portal
-        image: 519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:87
+        image: 519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:replaceImageTag
         ports:
         - containerPort: 8085
-
-        
