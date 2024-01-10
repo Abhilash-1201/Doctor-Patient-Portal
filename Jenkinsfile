@@ -105,6 +105,24 @@ pipeline {
                 }
            }   
         } 
+        stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "Doctor-Patient-Portal"
+            GIT_USER_NAME = "Abhilash-1201"
+        }
+        steps {
+            withCredentials([gitUsernamePassword(credentialsId: 'GitHub-ArgoCD', gitToolName: 'Default')]) {
+                sh '''
+                    git config user.email "rlabhilash1201@gmail.com"
+                    git config user.name "Abhilash-1201"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" Doctor-Patient-Portal/manifest/deployment.yml
+                    git add Doctor-Patient-Portal/manifest/deployment.yml
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+            }
+        }
     }
 }
 
