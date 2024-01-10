@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: doctor-patient-portal
-        image: nayab786/testrepo:99
+        image: nayab786/testrepo:replaceImageTag
         ports:
         - containerPort: 8085
 
