@@ -2,7 +2,7 @@ pipeline {
     agent any
      tools {maven "MAVEN"}
      environment { 
-       // devregistry = ""
+        devregistry = "nayab786/testrepo:${env.BUILD_NUMBER}"
         // This can be nexus3 or nexus2
         NEXUS_VERSION = "nexus3"
         // This can be http or https
@@ -96,7 +96,7 @@ pipeline {
         stage('Build docker image to dev ecr')  {
             steps{
                 script{
-                myImage = docker.build (nayab786/testrepo:${env.BUILD_NUMBER})
+                myImage = docker.build devregistry
                 }
             }
         }
