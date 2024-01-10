@@ -96,7 +96,7 @@ pipeline {
         stage('Build docker image to dev ecr')  {
             steps{
                 script{
-                myImage = docker.build (docker.build nayab786/testrepo:${env.BUILD_NUMBER})
+                myImage = docker.build docker.build nayab786/testrepo:${env.BUILD_NUMBER}
                 }
             }
         }
