@@ -107,8 +107,9 @@ pipeline {
                    sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                 }
                 sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
-           }   
-        } 
+             }   
+          } 
+        }
         stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Doctor-Patient-Portal"
