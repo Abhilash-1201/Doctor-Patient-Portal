@@ -9,8 +9,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  externalIPs:
-    - 3.142.232.54  # Replace with your desired external IP address
-    - 18.222.20.217
-  type: ClusterIP
+  type: NodePort
 
