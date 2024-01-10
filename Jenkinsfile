@@ -96,20 +96,15 @@ pipeline {
         stage('Build docker image to dev ecr')  {
             steps{
                 script{
-                myImage = docker.build devregistry
+                myImage = docker.build("nayab786/testrepo:${env.BUILD_NUMBER}")
                 }
             }
         }
-        stage('Pushing built docker image to Dev') {
-            steps{  
-                script {
-                   withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'nayab786', usernameVariable: 'nayab786')]) {
-                   sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-                }
-                sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
-             }   
-          } 
-        }
+        stage('Push image') {
+                   withDockerRegistry([ credentialsId: "dockerhub-credentials", url: "" ]) {
+                   dockerImage.push()
+               }
+            }    
         stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Doctor-Patient-Portal"
