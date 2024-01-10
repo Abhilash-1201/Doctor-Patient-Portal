@@ -100,11 +100,16 @@ pipeline {
                 }
             }
         }
-        stage('Push image') {
-                   withDockerRegistry([ credentialsId: "dockerhub-credentials", url: "" ]) {
-                   dockerImage.push()
-               }
-            }    
+        stage('Pushing built docker image to Dev') {
+            steps{  
+                script {
+        
+                   sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+
+                sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
+             }   
+          } 
+        }
         stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Doctor-Patient-Portal"
