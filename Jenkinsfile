@@ -2,7 +2,7 @@ pipeline {
     agent any
      tools {maven "MAVEN"}
      environment { 
-        devregistry = "519852036875.dkr.ecr.us-east-2.amazonaws.com/demo-repo:${env.BUILD_NUMBER}"
+        devregistry = "docker.build "nayab786/testrepo:${env.BUILD_NUMBER}"
         // This can be nexus3 or nexus2
         NEXUS_VERSION = "nexus3"
         // This can be http or https
@@ -14,6 +14,9 @@ pipeline {
         // Jenkins credential id to authenticate to Nexus OSS
         NEXUS_CREDENTIAL_ID = "nexusCredential"
         ARTIFACT_VERSION = "${BUILD_NUMBER}"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_USERNAME = "nayab786"
+        DOCKERHUB_PASSWORD = "nayab786"
     }
     stages {
         stage('Checkout Stage') {
@@ -100,9 +103,10 @@ pipeline {
         stage('Pushing built docker image to Dev') {
             steps{  
                 script {
-                   sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 519852036875.dkr.ecr.us-east-2.amazonaws.com'
-                   sh 'docker push ${devregistry}'
+                   withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'nayab786', usernameVariable: 'nayab786')]) {
+                   sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                 }
+                sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
            }   
         } 
         stage('Update Deployment File') {
