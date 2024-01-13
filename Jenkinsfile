@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Code Quality Check Via SonarQube'){
             steps{
-              withSonarQubeEnv(installationName: 'SonarQubeScanner',credentialsId: 'sonartoken'){
+              withSonarQubeEnv(installationName: 'SonarQube',credentialsId: 'sonartoken'){
                 sh "mvn sonar:sonar"
               }
             }
