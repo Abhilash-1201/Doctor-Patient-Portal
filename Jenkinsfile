@@ -23,6 +23,8 @@ pipeline {
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
 	    JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+        DOCKERHUB_USERNAME = "nayab786"
+        DOCKERHUB_PASSWORD = "nayab786"
     }
     stages {
         stage('Checkout Stage') {
@@ -71,28 +73,35 @@ pipeline {
 //                      nexus  stage            //
 
 
-        stage("Build & Push Docker Image") {
-            steps {
-                script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
-                    }
-
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
+        stage('Build docker image to dev ecr')  {
+            steps{
+                script{
+                myImage = docker.build("nayab786/testrepo:${env.BUILD_NUMBER}")
                 }
             }
+        }
 
+         stage('Pushing built docker image to Dev') {
+            steps{  
+                script {
+
+                   sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+
+                sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
+             }   
+          } 
+        }
+
+             
+
+
+        stage("Trivy Scan") {
+           steps {
+               script {
+	            sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nayab786/testrepo:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
+               }
+           }
        }
-        ///stage("Trivy Scan") {
-        //   steps {
-        //       script {
-	    //        sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nayab786/testrepo:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
-        //       }
-        //   }
-       //}
 
         stage ('Cleanup Artifacts') {
            steps {
