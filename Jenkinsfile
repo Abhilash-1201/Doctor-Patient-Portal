@@ -16,8 +16,13 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "nexusCredential"
         ARTIFACT_VERSION = "${BUILD_NUMBER}"
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKERHUB_USERNAME = "nayab786"
-        DOCKERHUB_PASSWORD = "nayab786"
+        APP_NAME = "testrepo"
+        RELEASE = "1.0.0"
+        DOCKER_USER = "nayab786"
+        DOCKER_PASS = 'nayab786'
+        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+	    JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
     stages {
         stage('Checkout Stage') {
@@ -62,46 +67,51 @@ pipeline {
             } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe reports and FindBugs reports
           }
         }
-        
+
 //                      nexus  stage            //
 
 
-        stage('Build docker image to dev ecr')  {
-            steps{
-                script{
-                myImage = docker.build("nayab786/testrepo:${env.BUILD_NUMBER}")
+        stage("Build & Push Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image = docker.build "${IMAGE_NAME}"
+                    }
+
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
                 }
             }
-        }
-        stage('Pushing built docker image to Dev') {
-            steps{  
-                script {
-        
-                   sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
 
-                sh "docker push nayab786/testrepo:${env.BUILD_NUMBER}"
-             }   
-          } 
-        }
-        stage('Update Deployment File') {
-        environment {
-            GIT_REPO_NAME = "Doctor-Patient-Portal"
-            GIT_USER_NAME = "Abhilash-1201"
-        }
-        steps {
-            withCredentials([gitUsernamePassword(credentialsId: 'GitHub-ArgoCD', gitToolName: 'Default')]) {
-                sh '''
-                    git config user.email "rlabhilash1201@gmail.com"
-                    git config user.name "Abhilash-1201"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" ./manifest/deployment.yml
-                    git add ./manifest/deployment.yml
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
+       }
+        stage("Trivy Scan") {
+           steps {
+               script {
+	            sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nayab786/testrepo:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
+               }
+           }
+       }
+
+        stage ('Cleanup Artifacts') {
+           steps {
+               script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+               }
+          }
+       }
+
+       stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                    sh "curl -v -k --user clouduser:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-232-128-192.ap-south-1.compute.amazonaws.com:8080/job/gitops-register-app-cd/buildWithParameters?token=gitops-token'"
+                }
             }
-        }
-        }
+       }
+    
+
     }
 }
 
