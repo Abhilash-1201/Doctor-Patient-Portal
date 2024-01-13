@@ -2,6 +2,7 @@ pipeline {
     agent any
      tools {maven "MAVEN"}
      environment { 
+        SCANNER_HOME = tool 'SonarQubeScanner'
         devregistry = "nayab786/testrepo:${env.BUILD_NUMBER}"
         // This can be nexus3 or nexus2
         NEXUS_VERSION = "nexus3"
@@ -26,7 +27,7 @@ pipeline {
         }
         stage('Code Quality Check Via SonarQube'){
             steps{
-              withSonarQubeEnv(credentialsId: 'sonartoken'){
+              withSonarQubeEnv(installationName: 'SonarQubeScanner',credentialsId: 'sonartoken'){
                 sh "mvn sonar:sonar"
               }
             }
