@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Checkout Stage') {
             steps {
-                git branch: 'main', credentialsId: 'DoctorpatientPortal', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
+                git branch: 'main', credentialsId: 'GitHub-CREDS', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
             }
         }
         stage('Code Quality Check Via SonarQube'){
@@ -55,7 +55,7 @@ pipeline {
         }
         stage("Build") {
           steps {
-            git branch: 'main', credentialsId: 'DoctorpatientPortal', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
+            git branch: 'main', credentialsId: 'GitHub-CREDS', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
             withMaven(maven: 'MAVEN') {
               sh "mvn clean package"
             } // withMaven will discover the generated Maven artifacts, JUnit Surefire & FailSafe reports and FindBugs reports
