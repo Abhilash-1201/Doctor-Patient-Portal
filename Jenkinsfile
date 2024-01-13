@@ -8,7 +8,7 @@ pipeline {
         // This can be http or https
         NEXUS_PROTOCOL = "http"
         // Where your Nexus is running
-        NEXUS_URL = "13.59.210.192:8081"
+        NEXUS_URL = "3.138.244.213:8081"
         // Repository where we will upload the artifact
         NEXUS_REPOSITORY = "DoctorPortal"
         // Jenkins credential id to authenticate to Nexus OSS
@@ -26,15 +26,23 @@ pipeline {
         }
         stage('Code Quality Check Via SonarQube'){
             steps{
-                script{
-                    sh "/opt/sonar-scanner/bin/sonar-scanner"
-                } 
+              withSonarQubeEnv(credentialsId: 'sonartoken'){
+                sh "mvn sonar:sonar"
+              }
             }
         }
+        //previous or old  stage
+//        stage('Code Quality Check Via SonarQube'){
+//            steps{
+//                script{
+//                    sh "/opt/sonar-scanner/bin/sonar-scanner"
+//                } 
+//            }
+//        }
         stage('Email Notification') {
             steps {
                 script {
-                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://3.14.68.117:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
+                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.218.250.74:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
            
                     if (qg == 'ERROR' || qg == 'OK') {
                     mail to: "rlabhilashabhi07@gmail.com",
