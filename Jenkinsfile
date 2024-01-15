@@ -91,18 +91,18 @@ pipeline {
              }   
           } 
         }
-        //stage("Trivy Scan") {
-        //   steps {
-        //       script {
-	    //        sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nayab786/testrepo:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
-        //       }
-        //   }
-      // }
+        stage("Trivy Scan") {
+           steps {
+               script {
+	            sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image nayab786/testrepo:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
+               }
+           }
+       }
 
        stage("Trigger CD Pipeline") {
             steps {
                 script {
-                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-3-138-120-136.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=gitops-token'"
+                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-3-138-120-136.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=GitHub-CREDS'"
                 }
             }
        }
