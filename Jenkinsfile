@@ -27,6 +27,11 @@ pipeline {
         DOCKERHUB_PASSWORD = "nayab786"
     }
     stages {
+        stage("Cleanup Workspace"){
+                steps {
+                cleanWs()
+                }
+        }
         stage('Checkout Stage') {
             steps {
                 git branch: 'main', credentialsId: 'GitHub-CREDS', url: 'https://github.com/Abhilash-1201/Doctor-Patient-Portal.git'
