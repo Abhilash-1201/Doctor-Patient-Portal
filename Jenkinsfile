@@ -105,12 +105,18 @@ pipeline {
        //}
 
        stage("Trigger CD Pipeline") {
-            steps {
-                script {
-                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=argocd'"
-                }
-            }
-       }
+    steps {
+        script {
+            def jenkinsUrl = 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080'
+            def jobName = 'Doctor-Patient-Portal-CD'
+            def authToken = "${JENKINS_API_TOKEN}"
+
+            echo "Triggering Jenkins job ${jobName} on ${jenkinsUrl} with token ${authToken}"
+
+            sh "curl -v -k --user abhi:${authToken} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' '${jenkinsUrl}/job/${jobName}/buildWithParameters?token=argocd'"
+        }
+    }
+}
     
 
     }
