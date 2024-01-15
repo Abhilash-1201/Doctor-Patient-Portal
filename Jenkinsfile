@@ -102,7 +102,7 @@ pipeline {
        stage("Trigger CD Pipeline") {
             steps {
                 script {
-                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=GitHub-CREDS'"
+                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=argocd'"
                 }
             }
        }
