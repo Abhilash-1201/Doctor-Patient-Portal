@@ -50,7 +50,7 @@ pipeline {
         stage('Email Notification') {
             steps {
                 script {
-                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://3.140.201.3:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
+                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.220.149.87:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
            
                     if (qg == 'ERROR' || qg == 'OK') {
                     mail to: "rlabhilashabhi07@gmail.com",
@@ -102,7 +102,7 @@ pipeline {
        stage("Trigger CD Pipeline") {
             steps {
                 script {
-                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-3-138-120-136.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=GitHub-CREDS'"
+                    sh "curl -v -k --user abhi:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080/job/Doctor-Patient-Portal-CD/buildWithParameters?token=GitHub-CREDS'"
                 }
             }
        }
