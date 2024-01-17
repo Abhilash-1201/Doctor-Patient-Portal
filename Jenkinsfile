@@ -55,7 +55,7 @@ pipeline {
         stage('Email Notification') {
             steps {
                 script {
-                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://18.220.149.87:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
+                    def qg = sh(returnStdout: true, script: 'curl -s -u admin:abhi "http://3.144.221.6:9000/api/qualitygates/project_status?projectKey=DoctorPatientPortal" | jq -r .projectStatus.status').trim()
            
                     if (qg == 'ERROR' || qg == 'OK') {
                     mail to: "rlabhilashabhi07@gmail.com",
@@ -107,7 +107,7 @@ pipeline {
        stage("Trigger CD Pipeline") {
     steps {
         script {
-            def jenkinsUrl = 'ec2-13-58-96-26.us-east-2.compute.amazonaws.com:8080'
+            def jenkinsUrl = 'ec2-18-225-55-91.us-east-2.compute.amazonaws.com:8080'
             def jobName = 'Doctor-Patient-Portal-CD'
             def authToken = "${JENKINS_API_TOKEN}"
 
