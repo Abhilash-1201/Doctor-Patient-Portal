@@ -104,7 +104,7 @@ pipeline {
         //   }
        //}
 
-       stage("Trigger CD Pipeline") {
+        stage("Trigger CD Pipeline") {
     steps {
         script {
             def jenkinsUrl = 'ec2-18-225-55-91.us-east-2.compute.amazonaws.com:8080'
