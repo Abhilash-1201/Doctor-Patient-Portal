@@ -106,13 +106,7 @@ pipeline {
 
        stage("Trigger Another Jenkins Job") {
             steps {
-                script {
-                    // Specify the name of the Jenkins job to trigger
-                    def jobToTrigger = 'Doctor-Patient-Portal-CD'
-                    
-                    // Trigger the job
-                    build job: jobToTrigger, wait: true
-                }
+                build 'Doctor-Patient-Portal-CD'
             }
         }
     
