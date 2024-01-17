@@ -104,9 +104,15 @@ pipeline {
         //   }
        //}
 
-       stage('triggerChildJob') {
+       stage("Trigger Another Jenkins Job") {
             steps {
-                build job: "Doctor-Patient-Portal-CD", wait: true
+                script {
+                    // Specify the name of the Jenkins job to trigger
+                    def jobToTrigger = 'Doctor-Patient-Portal-CD'
+                    
+                    // Trigger the job
+                    build job: jobToTrigger, wait: true
+                }
             }
         }
     
